@@ -30,10 +30,10 @@ resource "aws_security_group" "demo_jenkins_sg" {
     dynamic "ingress" {
         for_each = var.jenkins_ingress_rules
         content {
-        protocol    = "tcp"
-        from_port   = ingress.value
-        to_port     = ingress.value
-        cidr_blocks = ["0.0.0.0/0"]
+            protocol    = "tcp"
+            from_port   = ingress.value
+            to_port     = ingress.value
+            cidr_blocks = ["0.0.0.0/0"]
         }
     }
 
