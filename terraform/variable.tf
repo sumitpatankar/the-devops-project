@@ -17,7 +17,7 @@ variable "public_subnet_cidr_block" {
 variable "my_IP" {
   description = "Your IP adderss"
   type        = string
-  sensitive   = true
+  #sensitive   = true
 }
 
 # Security Group
