@@ -32,7 +32,8 @@ resource "aws_security_group" "demo_jenkins_sg" {
     ingress {
         description = "Allow ssh from my computer"
         from_port = "22"
-        to_port = "tcp"
+        to_port = "22"
+        protocol = "tcp"
         cidr_blocks = ["${var.my_ip}/32"]      
     }
     # We want the Jenkins EC2 instance to being able to talk to the internet
