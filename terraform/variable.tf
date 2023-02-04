@@ -19,3 +19,9 @@ variable "my_IP" {
   type        = string
   sensitive   = true
 }
+
+# Security Group
+variable "jenkins_ingress_rules" {
+  type    = list(number)
+  default = [8080, 22]
+}
