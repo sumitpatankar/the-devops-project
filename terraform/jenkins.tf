@@ -21,15 +21,9 @@ module "vpc" {
 }
 
 module "security_group" {
-<<<<<<< HEAD
-  source = "./modules/security_group"
-  vpc_id = module.vpc.vpc_id
-  my_ip  = var.my_IP
-=======
   source                = "./modules/security_group"
   vpc_id                = module.vpc.vpc_id
   my_ip                 = var.my_IP
->>>>>>> 004e31973e9de6905df9131bd1557628d43e4e8a
   jenkins_ingress_rules = var.jenkins_ingress_rules
 }
 

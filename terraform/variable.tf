@@ -17,12 +17,8 @@ variable "public_subnet_cidr_block" {
 variable "my_IP" {
   description = "Your IP adderss"
   type        = string
-<<<<<<< HEAD
-  #sensitive   = true
-=======
   sensitive   = true
   default     = "0.0.0.0/24"
->>>>>>> 004e31973e9de6905df9131bd1557628d43e4e8a
 }
 
 # Security Group
