@@ -27,3 +27,9 @@ variable "jenkins_ingress_rules" {
   type        = list(number)
   default     = [8080, 22]
 }
+
+# AWS profile
+variable "aws_profile" {
+  type    = string
+  default = "default"
+}
