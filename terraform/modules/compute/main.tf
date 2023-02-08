@@ -17,7 +17,7 @@ data "aws_ssm_parameter" "Jenkins_ami" {
 # Creating an EC2 instance called jenkins_server
 resource "aws_instance" "jenkins_server" {
     # Setting the AMI to the ID of the Jenkins_ami 20.04 AMI from the data store
-    ami = data.aws_ami.Jenkins_ami.id
+    ami = data.aws_ssm_parameter.Jenkins_ami.value
 
     # Setting the subnet to the public subnet we created
     subnet_id = var.public_subnet
