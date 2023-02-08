@@ -23,6 +23,6 @@ variable "my_IP" {
 # Security Group
 variable "jenkins_ingress_rules" {
   description = "SG ingress ports"
-  type    = list(number)
-  default = [8080, 22]
+  type        = list(number)
+  default     = [8080, 22]
 }
