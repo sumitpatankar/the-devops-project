@@ -8,6 +8,16 @@ variable "public_subnet" {
     description = "The sublic subnet ID's assigned to the Jenkins server"
 }
 
+# Variable where we will pass in the AWS profile
+variable "aws_profile" {
+    description = "The AWS profile"
+}
+
+# Variable where we will pass in the AWS region
+variable "aws_region" {
+    description = "The AWS region"
+}
+
 # This data store is holding the most recent Jenkins_ami 20.04 image
 data "aws_ssm_parameter" "Jenkins_ami" {
   #most_recent = "true"
