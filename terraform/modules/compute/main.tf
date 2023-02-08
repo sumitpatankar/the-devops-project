@@ -40,6 +40,8 @@ resource "aws_instance" "jenkins_server" {
 aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id} \
 && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
 EOF
+   }
+
     # Setting the Name tag to jenkins_server
     tags = {
         Name = "jenkins_server"
