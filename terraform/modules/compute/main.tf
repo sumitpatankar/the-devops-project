@@ -10,12 +10,8 @@ variable "public_subnet" {
 
 # This data store is holding the most recent Jenkins_ami 20.04 image
 data "aws_ssm_parameter" "Jenkins_ami" {
-  most_recent = "true"
-
-  filter {
-    name = "name"
-    values = ["/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"]
-  }
+  #most_recent = "true"
+  name     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
 # Creating an EC2 instance called jenkins_server
