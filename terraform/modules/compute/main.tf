@@ -8,8 +8,8 @@ variable "public_subnet" {
     description = "The sublic subnet ID's assigned to the Jenkins server"
 }
 
-# This data store is holding the most recent ubuntu 20.04 image
-data "aws_ami" "ubuntu" {
+# This data store is holding the most recent Jenkins_ami 20.04 image
+data "aws_ami" "Jenkins_ami" {
   most_recent = "true"
 
   filter {
@@ -27,8 +27,8 @@ data "aws_ami" "ubuntu" {
 
 # Creating an EC2 instance called jenkins_server
 resource "aws_instance" "jenkins_server" {
-    # Setting the AMI to the ID of the Ubuntu 20.04 AMI from the data store
-    ami = data.aws_ami.ubuntu.id
+    # Setting the AMI to the ID of the Jenkins_ami 20.04 AMI from the data store
+    ami = data.aws_ami.Jenkins_ami.id
 
     # Setting the subnet to the public subnet we created
     subnet_id = var.public_subnet
