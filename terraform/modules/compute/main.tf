@@ -32,8 +32,14 @@ resource "aws_instance" "jenkins_server" {
     key_name = aws_key_pair.demo_jenkins.key_name
 
     # Setting the user data to the bash file called install_jenkins.sh
-    user_data = "${file("${path.module}/install_jenkins.sh")}"
-
+    #user_data = "${file("${path.module}/install_jenkins.sh")}"
+    
+    # Added local exec
+    provisioner "local-exec" {
+    command = <<EOF
+aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id} \
+&& ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
+EOF
     # Setting the Name tag to jenkins_server
     tags = {
         Name = "jenkins_server"
