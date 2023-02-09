@@ -31,6 +31,6 @@ module "ec2_instance" {
   source         = "./modules/compute"
   security_group = module.security_group.sg_id
   public_subnet  = module.vpc.public_subnet_id
-  aws_profile = var.aws_profile
-  aws_region = var.aws_region
+  aws_profile    = var.aws_profile
+  aws_region     = var.aws_region
 }
