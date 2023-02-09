@@ -48,7 +48,7 @@ resource "aws_instance" "jenkins_server" {
     provisioner "local-exec" {
     command = <<EOF
 aws --profile ${var.aws_profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
-&& ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
+&& ansible-playbook --extra-vars 'passed_in_hosts=${aws_instance.jenkins_server.private_ip}' ansible_templates/install_jenkins.yaml
 EOF
   }
 
@@ -56,10 +56,10 @@ EOF
     tags = {
         Name = "jenkins_server"
     }
-    depends_on = [
-        aws_vpc.demo_vpc,
-        aws_subnet.demo_public_subnet,
-  ]
+#     depends_on = [
+#         aws_vpc.demo_vpc,
+#         aws_subnet.demo_public_subnet,
+#   ]
 }
 
 # Creating a key pair in AWS called demo_jenkins
