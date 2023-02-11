@@ -61,7 +61,17 @@ resource "aws_instance" "jenkins_server" {
 # && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
 # EOF
 #   }
-    data "template_file" "ansible_inventory" {
+
+    # Setting the Name tag to jenkins_server
+    tags = {
+        Name = "jenkins_server"
+    }
+    depends_on = [
+    aws_instance.jenkins_server,
+  ]
+}
+
+data "template_file" "ansible_inventory" {
       template = <<EOF
       [webservers]
       ${aws_instance.jenkins_server.private_ip}
@@ -82,16 +92,6 @@ resource "aws_instance" "jenkins_server" {
       playbook_path = "${var.playbook_path}"
       inventory_file = "${data.template_file.ansible_inventory.rendered}"
     }
-
-
-    # Setting the Name tag to jenkins_server
-    tags = {
-        Name = "jenkins_server"
-    }
-    depends_on = [
-    aws_instance.jenkins_server,
-  ]
-}
 
 # Creating a key pair in AWS called demo_jenkins
 resource "aws_key_pair" "demo_jenkins" {
