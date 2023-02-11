@@ -86,17 +86,10 @@ resource "aws_instance" "jenkins_server" {
 #       }
 #     }
 
-<<<<<<< HEAD
-locals {
-  ansible_inventory_file = data.template_file.template_file.rendered
-}
-resource "null_resource" "jenkins_install" {
-=======
 # locals {
 #   ansible_inventory_file = data.template_file.template_file.content
 # }
 # resource "null_resource" "jenkins_install" {
->>>>>>> origin/devel
 
 #   provisioner "local-exec" {
 #     command = "echo ${local.ansible_inventory_file} > ansible_inventory_file.ini"
