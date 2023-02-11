@@ -67,7 +67,7 @@ resource "aws_instance" "jenkins_server" {
         Name = "jenkins_server"
     }
     depends_on = [
-    aws_instance.jenkins_server.private_ip,
+    aws_instance.jenkins_server.private_ip.id,
   ]
 }
 
