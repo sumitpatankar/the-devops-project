@@ -73,10 +73,10 @@ resource "aws_instance" "jenkins_server" {
 
 data "template_file" "template_file" {
       template = <<EOF
-      [jenkins_servers]
+      [jenkins_server]
       ${aws_instance.jenkins_server.private_ip}
 
-      [jenkins_servers:vars]
+      [jenkins_server:vars]
       ansible_user=ec2-user
       ansible_ssh_private_key_file=${var.private_key_path}
       EOF
