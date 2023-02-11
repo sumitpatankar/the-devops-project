@@ -25,7 +25,7 @@ variable "private_key_path" {
 
 # Variable where we set playbook path
 variable "playbook_path" {
-  default = " ./../../ansible_templates/install_jenkins.yaml"
+  default = "~/the-devops-project/terraform/ansible_templates/install_jenkins.yaml"
 }
 
 # This data store is holding the most recent Jenkins_ami 20.04 image
