@@ -73,10 +73,10 @@ resource "aws_instance" "jenkins_server" {
 
 data "template_file" "ansible_inventory" {
       template = <<EOF
-      [webservers]
+      [jenkins_servers]
       ${aws_instance.jenkins_server.private_ip}
 
-      [webservers:vars]
+      [jenkins_servers:vars]
       ansible_user=ec2-user
       ansible_ssh_private_key_file=${var.private_key_path}
       EOF
@@ -86,12 +86,11 @@ data "template_file" "ansible_inventory" {
       }
     }
 
-module "ansible_run" {
-      source = "git://github.com/ansible/ansible-runner.git"
-      version = "2.0"
-      playbook_path = "${var.playbook_path}"
-      inventory_file = "${data.template_file.ansible_inventory.rendered}"
-    }
+provisioner "local-exec" {
+    command = <<EOF
+      ansible-playbook ${var.playbook_path} -i ${data.template_file.ansible_inventory.rendered}
+    EOF
+  }
 
 # Creating a key pair in AWS called demo_jenkins
 resource "aws_key_pair" "demo_jenkins" {
