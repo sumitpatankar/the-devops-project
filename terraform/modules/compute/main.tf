@@ -71,7 +71,7 @@ resource "aws_instance" "jenkins_server" {
   ]
 }
 
-data "template_file" "ansible_inventory" {
+data "template_file" "template_file" {
       template = <<EOF
       [jenkins_servers]
       ${aws_instance.jenkins_server.private_ip}
@@ -85,10 +85,19 @@ data "template_file" "ansible_inventory" {
         private_key_path = "${var.private_key_path}"
       }
     }
-resource "null_resource" "example" {
+
+locals {
+  ansible_inventory_file = data.template_file.template_file.result
+}
+resource "null_resource" "jenkins_install" {
+
+  provisioner "local-exec" {
+    command = "echo ${local.ansible_inventory_file} > ansible_inventory_file.ini"
+  }
+
   provisioner "local-exec" {
       command = <<EOF
-        ansible-playbook ${var.playbook_path} -i ${data.template_file.ansible_inventory.rendered}
+        ansible-playbook ${var.playbook_path} -i ansible_inventory_file.ini
       EOF
     }
 }
