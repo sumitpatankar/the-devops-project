@@ -87,7 +87,7 @@ data "template_file" "template_file" {
     }
 
 locals {
-  ansible_inventory_file = data.template_file.template_file.rendered
+  ansible_inventory_file = data.template_file.template_file.content
 }
 resource "null_resource" "jenkins_install" {
 
