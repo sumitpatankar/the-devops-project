@@ -1,6 +1,8 @@
 <<<<<<< HEAD
 # Local .terraform directories
 **/.terraform/*
+**.terraform.lock.hcl*
+.gitignore
 
 # .tfstate files
 *.tfstate
@@ -353,3 +355,4 @@ Network Trash Folder
 Temporary Items
 .apdisk
 >>>>>>> 455fa9f (Add gitignore)
+.terraform.lock.hcl
