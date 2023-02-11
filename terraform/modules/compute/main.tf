@@ -55,52 +55,52 @@ resource "aws_instance" "jenkins_server" {
     #user_data = "${file("${path.module}/install_jenkins.sh")}"
     
     # Added local exec
-#     provisioner "local-exec" {
-#     command = <<EOF
-# aws --profile ${var.aws_profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
-# && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
-# EOF
-#   }
+    provisioner "local-exec" {
+      command = <<EOF
+  aws --profile ${var.aws_profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
+  && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ${var.playbook_path}
+  EOF
+    }
 
     # Setting the Name tag to jenkins_server
     tags = {
         Name = "jenkins_server"
     }
     depends_on = [
-    aws_instance.jenkins_server,
+    aws_instance.jenkins_server.private_ip,
   ]
 }
 
-data "template_file" "template_file" {
-      template = <<EOF
-      [jenkins_server]
-      ${aws_instance.jenkins_server.private_ip}
+# data "template_file" "template_file" {
+#       template = <<EOF
+#       [jenkins_server]
+#       ${aws_instance.jenkins_server.private_ip}
 
-      [jenkins_server:vars]
-      ansible_user=ec2-user
-      ansible_ssh_private_key_file=${var.private_key_path}
-      EOF
+#       [jenkins_server:vars]
+#       ansible_user=ec2-user
+#       ansible_ssh_private_key_file=${var.private_key_path}
+#       EOF
 
-      vars = {
-        private_key_path = "${var.private_key_path}"
-      }
-    }
+#       vars = {
+#         private_key_path = "${var.private_key_path}"
+#       }
+#     }
 
-locals {
-  ansible_inventory_file = data.template_file.template_file.content
-}
-resource "null_resource" "jenkins_install" {
+# locals {
+#   ansible_inventory_file = data.template_file.template_file.content
+# }
+# resource "null_resource" "jenkins_install" {
 
-  provisioner "local-exec" {
-    command = "echo ${local.ansible_inventory_file} > ansible_inventory_file.ini"
-  }
+#   provisioner "local-exec" {
+#     command = "echo ${local.ansible_inventory_file} > ansible_inventory_file.ini"
+#   }
 
-  provisioner "local-exec" {
-      command = <<EOF
-        ansible-playbook ${var.playbook_path} -i ansible_inventory_file.ini
-      EOF
-    }
-}
+#   provisioner "local-exec" {
+#       command = <<EOF
+#         ansible-playbook ${var.playbook_path} -i ansible_inventory_file.ini
+#       EOF
+#     }
+# }
 
 # Creating a key pair in AWS called demo_jenkins
 resource "aws_key_pair" "demo_jenkins" {
