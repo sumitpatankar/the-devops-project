@@ -18,6 +18,16 @@ variable "aws_region" {
     description = "The AWS region"
 }
 
+# Variable where we set private key path
+variable "private_key_path" {
+  default = "~/the-devops-project/terraform/demo_jenkins.pem"
+}
+
+# Variable where we set playbook path
+variable "playbook_path" {
+  default = " ./../../ansible_templates/install_jenkins.yaml"
+}
+
 # This data store is holding the most recent Jenkins_ami 20.04 image
 data "aws_ssm_parameter" "Jenkins_ami" {
   #most_recent = "true"
@@ -45,21 +55,42 @@ resource "aws_instance" "jenkins_server" {
     #user_data = "${file("${path.module}/install_jenkins.sh")}"
     
     # Added local exec
-    provisioner "local-exec" {
-    command = <<EOF
-aws --profile ${var.aws_profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
-&& ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
-EOF
-  }
+#     provisioner "local-exec" {
+#     command = <<EOF
+# aws --profile ${var.aws_profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
+# && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/install_jenkins.yaml
+# EOF
+#   }
+    data "template_file" "ansible_inventory" {
+      template = <<EOF
+      [webservers]
+      ${aws_instance.jenkins_server.private_ip}
+
+      [webservers:vars]
+      ansible_user=ec2-user
+      ansible_ssh_private_key_file=${var.private_key_path}
+      EOF
+
+      vars = {
+        private_key_path = "${var.private_key_path}"
+      }
+    }
+
+    module "ansible_run" {
+      source = "git::https://github.com/ansible/ansible-runner.git?ref=stable-2.0"
+
+      playbook_path = "${var.playbook_path}"
+      inventory_file = "${data.template_file.ansible_inventory.rendered}"
+    }
+
 
     # Setting the Name tag to jenkins_server
     tags = {
         Name = "jenkins_server"
     }
-#     depends_on = [
-#         aws_vpc.demo_vpc,
-#         aws_subnet.demo_public_subnet,
-#   ]
+    depends_on = [
+    aws_instance.jenkins_server,
+  ]
 }
 
 # Creating a key pair in AWS called demo_jenkins
@@ -82,5 +113,8 @@ resource "aws_eip" "jenkins_eip" {
     # Setting the tag Name to jenkins_eip
     tags = {
         Name = "jenkins_eip"
-    }  
+    }
+    depends_on = [
+    aws_instance.jenkins_server,
+  ]
 }
