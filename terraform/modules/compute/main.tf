@@ -85,12 +85,13 @@ data "template_file" "ansible_inventory" {
         private_key_path = "${var.private_key_path}"
       }
     }
-
-provisioner "local-exec" {
-    command = <<EOF
-      ansible-playbook ${var.playbook_path} -i ${data.template_file.ansible_inventory.rendered}
-    EOF
-  }
+resource "null_resource" "example" {
+  provisioner "local-exec" {
+      command = <<EOF
+        ansible-playbook ${var.playbook_path} -i ${data.template_file.ansible_inventory.rendered}
+      EOF
+    }
+}
 
 # Creating a key pair in AWS called demo_jenkins
 resource "aws_key_pair" "demo_jenkins" {
