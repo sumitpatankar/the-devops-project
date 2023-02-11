@@ -86,9 +86,9 @@ data "template_file" "ansible_inventory" {
       }
     }
 
-    module "ansible_run" {
-      source = "git::https://github.com/ansible/ansible-runner.git?ref=stable-2.0"
-
+module "ansible_run" {
+      source = "git://github.com/ansible/ansible-runner.git"
+      version = "2.0"
       playbook_path = "${var.playbook_path}"
       inventory_file = "${data.template_file.ansible_inventory.rendered}"
     }
